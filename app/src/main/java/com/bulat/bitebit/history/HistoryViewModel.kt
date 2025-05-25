@@ -1,4 +1,4 @@
-package com.bulat.bitebit.presentation
+package com.bulat.bitebit.history
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bulat.bitebit.domain.usecase.GetAddressUseCase
 import com.bulat.bitebit.domain.usecase.GetTransactionsUseCase
-import com.bulat.bitebit.presentation.model.TransactionUiItem
+import com.bulat.bitebit.model.TransactionUiItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

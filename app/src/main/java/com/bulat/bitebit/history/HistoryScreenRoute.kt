@@ -1,4 +1,4 @@
-package com.bulat.bitebit.presentation.compose
+package com.bulat.bitebit.history
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -10,7 +10,6 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.bulat.bitebit.R
-import com.bulat.bitebit.presentation.HistoryViewModel
 
 const val HISTORY_SCREEN_ROUTE = "history_screen_route"
 

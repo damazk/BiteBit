@@ -1,4 +1,4 @@
-package com.bulat.bitebit.presentation.compose
+package com.bulat.bitebit.home
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -7,7 +7,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.bulat.bitebit.R
-import com.bulat.bitebit.presentation.HomeViewModel
 
 const val HOME_SCREEN_ROUTE = "home_screen_route"
 

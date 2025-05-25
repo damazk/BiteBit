@@ -1,4 +1,4 @@
-package com.bulat.bitebit.presentation.compose
+package com.bulat.bitebit.home
 
 import android.content.Intent
 import android.net.Uri
@@ -29,6 +29,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -86,7 +90,7 @@ fun HomeScreen(
 
             if (showSuccessDialog) {
                 ShowSuccessTransactionDialog(
-                    transactionId = transactionId,
+                    txId = transactionId,
                     titleText = stringResource(R.string.your_funds_have_been_sent),
                     text = stringResource(R.string.your_transaction_id_is),
                     onDismissRequest = onDismissRequest,
@@ -258,16 +262,17 @@ fun BtcFilledButton(
 )
 
 @Composable
-private fun ShowSuccessTransactionDialog(
-    transactionId: String,
+fun ShowSuccessTransactionDialog(
+    txId: String,
     titleText: String,
     text: String,
-    onDismissRequest: () -> Unit,
-    onConfirmBtnClick: () -> Unit,
+    onDismissRequest: (() -> Unit)? = null,
+    onConfirmBtnClick: (() -> Unit)? = null,
     confirmBtnText: String,
 ) {
 
     val context = LocalContext.current
+    var showDialog by rememberSaveable { mutableStateOf(true) }
 
     AlertDialog(
         title = {
@@ -280,22 +285,22 @@ private fun ShowSuccessTransactionDialog(
             Column {
                 Text(text)
                 Text(
-                    text = transactionId,
+                    text = txId,
                     textDecoration = TextDecoration.Underline,
                     modifier = Modifier
                         .clickable {
-                            val url = "https://mempool.space/signet/tx/$transactionId"
+                            val url = "https://mempool.space/signet/tx/$txId"
                             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                             context.startActivity(intent)
                         }
                 )
             }
         },
-        onDismissRequest = onDismissRequest,
+        onDismissRequest = onDismissRequest ?: { showDialog = false },
         confirmButton = {
             BtcFilledButton(
                 text = confirmBtnText,
-                onClick = onConfirmBtnClick
+                onClick = onConfirmBtnClick ?: { showDialog = false }
             )
         },
     )

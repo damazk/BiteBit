@@ -1,4 +1,4 @@
-package com.bulat.bitebit.presentation.compose
+package com.bulat.bitebit.history
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -18,7 +18,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.bulat.bitebit.R
-import com.bulat.bitebit.presentation.model.TransactionUiItem
+import com.bulat.bitebit.home.BtcWalletTopBar
+import com.bulat.bitebit.model.TransactionUiItem
 import com.bulat.bitebit.utils.compose.BtcWalletErrorDialog
 import java.time.Instant
 import java.time.ZoneId
