@@ -1,7 +1,7 @@
 package com.bulat.bitebit.send_btc.presentation
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -51,7 +51,8 @@ class SendBtcViewModel @Inject constructor(
 
     fun onSumChange(value: String) {
         sum = value
-        isSumError = balance < (sum.toDoubleOrNull() ?: 0.0)
+        val sumDouble = sum.toDoubleOrNull() ?: 0.0
+        isSumError = balance < sumDouble || sumDouble <= 0.0
     }
 
     fun onSendBtnClick() = viewModelScope.launch(Dispatchers.IO) {
@@ -86,5 +87,10 @@ class SendBtcViewModel @Inject constructor(
             showErrorDialog = true
             errorMessage = it.message
         }
+    }
+
+    fun onDismissRequest() {
+        showErrorDialog = false
+        showSuccessDialog = false
     }
 }

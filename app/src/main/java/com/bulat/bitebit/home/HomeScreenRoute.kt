@@ -10,23 +10,22 @@ import com.bulat.bitebit.R
 
 const val HOME_SCREEN_ROUTE = "home_screen_route"
 
-fun NavGraphBuilder.homeScreen(navigateToHistoryScreen: () -> Unit) =
-    composable(HOME_SCREEN_ROUTE) {
-        HomeScreenRoute(navigateToHistoryScreen)
-    }
+fun NavGraphBuilder.homeScreen(
+    navigateToHistoryScreen: () -> Unit,
+    navigateToSendBtcScreen: () -> Unit
+) = composable(HOME_SCREEN_ROUTE) {
+    HomeScreenRoute(navigateToHistoryScreen, navigateToSendBtcScreen)
+}
 
 @Composable
 fun HomeScreenRoute(
     navigateToHistoryScreen: () -> Unit,
+    navigateToSendBtcScreen: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
 
     val address = viewModel.address
     val balance = viewModel.balance
-    val recipientAddress = viewModel.recipientAddress
-    val sum = viewModel.sum
-    val showSuccessDialog = viewModel.showSuccessDialog
-    val txId = viewModel.transactionId
     val showErrorDialog = viewModel.showErrorDialog
 
     val errorMessage = viewModel.errorMessage?.let {
@@ -41,14 +40,7 @@ fun HomeScreenRoute(
     HomeScreen(
         balance = balance.toString(),
         address = address,
-        recipientAddress = recipientAddress,
-        onRecipientAddressChange = viewModel::onRecipientAddressChange,
-        sum = sum,
-        onSumChange = viewModel::onSumChange,
-        isSumError = balance < (sum.toDoubleOrNull() ?: 0.0),
-        onSendBtnClick = viewModel::onSendBtnClick,
-        showSuccessDialog = showSuccessDialog,
-        txId = txId,
+        onSendBtnClick = navigateToSendBtcScreen,
         onDismissRequest = viewModel::onDismissRequest,
         onConfirmBtnClick = viewModel::onDismissRequest,
         showErrorDialog = showErrorDialog,

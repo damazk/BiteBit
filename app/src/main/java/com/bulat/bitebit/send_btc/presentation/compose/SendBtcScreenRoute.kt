@@ -8,6 +8,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.bulat.bitebit.R
@@ -19,6 +20,11 @@ const val SEND_BTC_ROUTE = "send_btc_route"
 fun NavGraphBuilder.sendBtcScreen(navigateUp: () -> Unit) = composable(SEND_BTC_ROUTE) {
     SendBtcScreenRoute(navigateUp)
 }
+
+fun NavController.navigateToSendBtcScreen() = navigate(
+    route = SEND_BTC_ROUTE,
+    builder = { launchSingleTop = true }
+)
 
 @Composable
 fun SendBtcScreenRoute(
@@ -63,7 +69,7 @@ fun SendBtcScreenRoute(
             txId = txId,
             showErrorDialog = showErrorDialog,
             errorMessage = errorMessage,
-            navigateUp = navigateUp
+            onDismissRequest = { viewModel.onDismissRequest() }
         )
     }
 }
