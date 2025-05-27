@@ -2,7 +2,7 @@ package com.bulat.bitebit.domain.usecase
 
 import com.bulat.bitebit.data.model.TransactionDto
 import com.bulat.bitebit.domain.repository.BtcApiServiceRepository
-import com.bulat.bitebit.presentation.model.TransactionUiItem
+import com.bulat.bitebit.model.TransactionUiItem
 import javax.inject.Inject
 
 class GetTransactionsUseCase @Inject constructor(

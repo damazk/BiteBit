@@ -1,4 +1,4 @@
-package com.bulat.bitebit.presentation.model
+package com.bulat.bitebit.model
 
 data class TransactionUiItem(
     val txid: String,

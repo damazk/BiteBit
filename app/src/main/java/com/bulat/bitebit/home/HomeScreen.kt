@@ -1,4 +1,4 @@
-package com.bulat.bitebit.presentation.compose
+package com.bulat.bitebit.home
 
 import android.content.Intent
 import android.net.Uri
@@ -11,9 +11,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material.icons.automirrored.rounded.List
 import androidx.compose.material.icons.automirrored.rounded.Send
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -29,8 +31,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -48,24 +55,13 @@ fun HomeScreen(
     modifier: Modifier = Modifier.fillMaxSize(),
     balance: String,
     address: String,
-    recipientAddress: String,
-    sum: String,
-    onSumChange: (String) -> Unit,
-    isSumError: Boolean,
-    onRecipientAddressChange: (String) -> Unit,
-    onSendBtnClick: (String, String, String) -> Unit,
-    showSuccessDialog: Boolean,
-    txId: String?,
     onDismissRequest: () -> Unit,
     onConfirmBtnClick: () -> Unit,
     showErrorDialog: Boolean,
     errorMessage: String,
     onHistoryBtnClick: (String) -> Unit,
+    onSendBtnClick: () -> Unit
 ) {
-
-    val sumSupportingText = if (isSumError) stringResource(R.string.not_enough_funds) else ""
-
-    val transactionId = txId ?: stringResource(R.string.failed_to_load_transaction_id)
 
     Scaffold(
         modifier = modifier,
@@ -83,17 +79,6 @@ fun HomeScreen(
                 .padding(paddings)
                 .padding(16.dp)
         ) {
-
-            if (showSuccessDialog) {
-                ShowSuccessTransactionDialog(
-                    transactionId = transactionId,
-                    titleText = stringResource(R.string.your_funds_have_been_sent),
-                    text = stringResource(R.string.your_transaction_id_is),
-                    onDismissRequest = onDismissRequest,
-                    onConfirmBtnClick = onConfirmBtnClick,
-                    confirmBtnText = stringResource(R.string.send_more)
-                )
-            }
 
             if (showErrorDialog) {
                 BtcWalletErrorDialog(
@@ -125,29 +110,11 @@ fun HomeScreen(
 
                 Spacer(Modifier.height(20.dp))
 
-                // Recipient Address Field
-                BtcOutlinedTextField(
-                    value = recipientAddress,
-                    onValueChange = onRecipientAddressChange,
-                    labelText = stringResource(R.string.address_to_send)
-                )
-
-                // Sum Field
-                BtcOutlinedTextField(
-                    value = sum,
-                    onValueChange = onSumChange,
-                    labelText = stringResource(R.string.amount_to_send),
-                    isError = isSumError,
-                    supportingText = sumSupportingText,
-                    keyboardType = KeyboardType.Number
-                )
-
-                Spacer(Modifier.weight(1f))
-
                 BtcFilledButton(
+                    modifier = Modifier.width(120.dp),
                     text = stringResource(R.string.send),
-                    enabled = recipientAddress.isNotEmpty() && sum.isNotEmpty() && !isSumError,
-                    onClick = { onSendBtnClick(address, recipientAddress, sum) }
+                    trailingIcon = Icons.AutoMirrored.Rounded.Send,
+                    onClick = onSendBtnClick
                 )
             }
 
@@ -200,8 +167,8 @@ fun BtcWalletTopBar(
                     onClick = onHistoryBtnClick
                 ) {
                     Icon(
-                        imageVector = Icons.AutoMirrored.Rounded.Send,
-                        contentDescription = Icons.AutoMirrored.Rounded.Send.name,
+                        imageVector = Icons.AutoMirrored.Rounded.List,
+                        contentDescription = Icons.AutoMirrored.Rounded.List.name,
                         tint = Color.White
                     )
                 }
@@ -245,7 +212,8 @@ fun BtcFilledButton(
     enabled: Boolean = true,
     containerColor: Color = Color(0xFFE3851B),
     contentColor: Color = Color.White,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    trailingIcon: ImageVector? = null
 ) = Button(
     modifier = modifier,
     onClick = onClick,
@@ -254,20 +222,30 @@ fun BtcFilledButton(
         containerColor = containerColor,
         contentColor = contentColor
     ),
-    content = { Text(text) }
+    content = {
+        Text(text)
+        if (trailingIcon != null) {
+            Spacer(Modifier.width(10.dp))
+            Icon(
+                imageVector = trailingIcon,
+                contentDescription = trailingIcon.name
+            )
+        }
+    }
 )
 
 @Composable
-private fun ShowSuccessTransactionDialog(
-    transactionId: String,
+fun ShowSuccessTransactionDialog(
+    txId: String,
     titleText: String,
     text: String,
-    onDismissRequest: () -> Unit,
-    onConfirmBtnClick: () -> Unit,
+    onDismissRequest: (() -> Unit)? = null,
+    onConfirmBtnClick: (() -> Unit)? = null,
     confirmBtnText: String,
 ) {
 
     val context = LocalContext.current
+    var showDialog by rememberSaveable { mutableStateOf(true) }
 
     AlertDialog(
         title = {
@@ -280,22 +258,22 @@ private fun ShowSuccessTransactionDialog(
             Column {
                 Text(text)
                 Text(
-                    text = transactionId,
+                    text = txId,
                     textDecoration = TextDecoration.Underline,
                     modifier = Modifier
                         .clickable {
-                            val url = "https://mempool.space/signet/tx/$transactionId"
+                            val url = "https://mempool.space/signet/tx/$txId"
                             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                             context.startActivity(intent)
                         }
                 )
             }
         },
-        onDismissRequest = onDismissRequest,
+        onDismissRequest = onDismissRequest ?: { showDialog = false },
         confirmButton = {
             BtcFilledButton(
                 text = confirmBtnText,
-                onClick = onConfirmBtnClick
+                onClick = onConfirmBtnClick ?: { showDialog = false }
             )
         },
     )
@@ -307,14 +285,7 @@ private fun PreviewHomeScreen() = BiteBit {
     HomeScreen(
         balance = "0.004000324",
         address = "jaldfgjhveklrhvkleshjdflkg32413214feferf",
-        recipientAddress = "",
-        onRecipientAddressChange = {},
-        sum = "",
-        onSumChange = {},
-        onSendBtnClick = { _, _, _ -> },
-        showSuccessDialog = false,
-        txId = "hfqwieufg8qu2y3f4iougq34uito8webr34w4t4q35tyghbe5",
-        isSumError = false,
+        onSendBtnClick = { },
         onDismissRequest = {},
         onConfirmBtnClick = {},
         showErrorDialog = false,
