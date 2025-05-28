@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -18,7 +17,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.bulat.bitebit.R
-import com.bulat.bitebit.home.BtcWalletTopBar
 import com.bulat.bitebit.model.TransactionUiItem
 import com.bulat.bitebit.utils.compose.BtcWalletErrorDialog
 import java.time.Instant
@@ -28,42 +26,28 @@ import java.time.format.DateTimeFormatter
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HistoryScreen(
+    modifier: Modifier = Modifier,
     transactions: List<TransactionUiItem>,
-    navigateUp: () -> Unit,
     showErrorDialog: Boolean,
     errorMessage: String,
     onDismissRequest: () -> Unit,
     onConfirmBtnClick: () -> Unit,
-    modifier: Modifier = Modifier
-        .fillMaxSize()
-        .padding(16.dp),
 ) {
 
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        topBar = {
-            BtcWalletTopBar(
-                title = stringResource(R.string.transactions_history),
-                onNavigationIconClick = navigateUp
+    Box(modifier.fillMaxSize().padding(16.dp)) {
+
+        if (showErrorDialog) {
+            BtcWalletErrorDialog(
+                titleText = stringResource(R.string.failed_to_load_transactions),
+                message = errorMessage,
+                onDismissRequest = onDismissRequest,
+                onConfirmBtnClick = onConfirmBtnClick
             )
         }
-    ) { paddings ->
 
-        Box(modifier.padding(paddings)) {
-
-            if (showErrorDialog) {
-                BtcWalletErrorDialog(
-                    titleText = stringResource(R.string.failed_to_load_transactions),
-                    message = errorMessage,
-                    onDismissRequest = onDismissRequest,
-                    onConfirmBtnClick = onConfirmBtnClick
-                )
-            }
-
-            LazyColumn(Modifier.fillMaxSize()) {
-                items(transactions) { tx ->
-                    TransactionItem(tx)
-                }
+        LazyColumn(Modifier.fillMaxSize()) {
+            items(transactions) { tx ->
+                TransactionItem(tx)
             }
         }
     }
@@ -87,9 +71,7 @@ fun TransactionItem(tx: TransactionUiItem) {
     ) {
         Column(modifier = Modifier.padding(12.dp)) {
             Text(text = direction, color = color)
-            Text(
-                text = stringResource(R.string.transaction_id, tx.txid),
-            )
+            Text(text = stringResource(R.string.transaction_id, tx.txid))
             Text(text = stringResource(R.string.date, formattedDate))
             Text(text = stringResource(R.string.sum_tbtc, tx.amount.toDouble() / 100_000_000))
         }

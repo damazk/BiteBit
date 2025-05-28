@@ -12,7 +12,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.bulat.bitebit.R
-import com.bulat.bitebit.home.BtcWalletTopBar
+import com.bulat.bitebit.core.composables.topbars.BitTopBar
 import com.bulat.bitebit.send_btc.presentation.SendBtcViewModel
 
 const val SEND_BTC_ROUTE = "send_btc_route"
@@ -50,7 +50,7 @@ fun SendBtcScreenRoute(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            BtcWalletTopBar(
+            BitTopBar(
                 title = stringResource(R.string.bitcoin_wallet),
                 onNavigationIconClick = navigateUp
             )

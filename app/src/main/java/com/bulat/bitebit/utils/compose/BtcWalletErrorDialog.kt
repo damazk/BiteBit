@@ -10,7 +10,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import com.bulat.bitebit.R
-import com.bulat.bitebit.home.BtcFilledButton
+import com.bulat.bitebit.core.composables.buttons.BitFilledButton
 
 @Composable
 fun BtcWalletErrorDialog(
@@ -34,7 +34,7 @@ fun BtcWalletErrorDialog(
         },
         onDismissRequest = onDismissRequest ?: { showDialog = false },
         confirmButton = {
-            BtcFilledButton(
+            BitFilledButton(
                 text = stringResource(R.string.ok),
                 onClick = onConfirmBtnClick ?: { showDialog = false }
             )

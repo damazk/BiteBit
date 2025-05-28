@@ -8,44 +8,30 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.ArrowBack
-import androidx.compose.material.icons.automirrored.rounded.List
 import androidx.compose.material.icons.automirrored.rounded.Send
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.bulat.bitebit.R
+import com.bulat.bitebit.core.composables.buttons.BitFilledButton
+import com.bulat.bitebit.core.composables.topbars.BitTopBar
 import com.bulat.bitebit.ui.theme.BiteBit
 import com.bulat.bitebit.utils.compose.BtcWalletErrorDialog
 
@@ -66,7 +52,7 @@ fun HomeScreen(
     Scaffold(
         modifier = modifier,
         topBar = {
-            BtcWalletTopBar(
+            BitTopBar(
                 title = stringResource(R.string.bitcoin_wallet),
                 onHistoryBtnClick = { onHistoryBtnClick(address) },
             )
@@ -110,7 +96,7 @@ fun HomeScreen(
 
                 Spacer(Modifier.height(20.dp))
 
-                BtcFilledButton(
+                BitFilledButton(
                     modifier = Modifier.width(120.dp),
                     text = stringResource(R.string.send),
                     trailingIcon = Icons.AutoMirrored.Rounded.Send,
@@ -121,118 +107,6 @@ fun HomeScreen(
         }
     }
 }
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun BtcWalletTopBar(
-    title: String,
-    titleColor: Color = Color.White,
-    containerColor: Color = Color(0xFFE3851B),
-    modifier: Modifier = Modifier.fillMaxWidth(),
-    onHistoryBtnClick: (() -> Unit)? = null,
-    onNavigationIconClick: (() -> Unit)? = null
-) {
-
-    val title = @Composable {
-        Text(
-            text = title,
-            fontWeight = FontWeight.SemiBold
-        )
-    }
-
-    CenterAlignedTopAppBar(
-        modifier = modifier,
-        title = title,
-        navigationIcon = {
-            if (onNavigationIconClick != null) {
-
-                IconButton(
-                    onClick = onNavigationIconClick
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                        contentDescription = Icons.AutoMirrored.Rounded.ArrowBack.name,
-                        tint = Color.White
-                    )
-                }
-            }
-        },
-        colors = TopAppBarDefaults.topAppBarColors(
-            titleContentColor = titleColor,
-            containerColor = containerColor
-        ),
-        actions =  {
-            if (onHistoryBtnClick != null) {
-                IconButton(
-                    onClick = onHistoryBtnClick
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Rounded.List,
-                        contentDescription = Icons.AutoMirrored.Rounded.List.name,
-                        tint = Color.White
-                    )
-                }
-            }
-        }
-    )
-}
-
-@Composable
-fun BtcOutlinedTextField(
-    modifier: Modifier = Modifier.fillMaxWidth(),
-    value: String,
-    onValueChange: (String) -> Unit,
-    labelText: String,
-    isError: Boolean = false,
-    supportingText: String = "",
-    keyboardType: KeyboardType = KeyboardType.Text,
-    color: Color = Color(0xFFE3851B)
-) = OutlinedTextField(
-    modifier = modifier,
-    value = value,
-    onValueChange = onValueChange,
-    label = {
-        Text(labelText)
-    },
-    isError = isError,
-    supportingText = {
-        Text(supportingText)
-    },
-    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = keyboardType),
-    colors = OutlinedTextFieldDefaults.colors(
-        unfocusedBorderColor = color,
-        focusedBorderColor = color
-    )
-)
-
-@Composable
-fun BtcFilledButton(
-    text: String,
-    modifier: Modifier = Modifier.fillMaxWidth(),
-    enabled: Boolean = true,
-    containerColor: Color = Color(0xFFE3851B),
-    contentColor: Color = Color.White,
-    onClick: () -> Unit,
-    trailingIcon: ImageVector? = null
-) = Button(
-    modifier = modifier,
-    onClick = onClick,
-    enabled = enabled,
-    colors = ButtonDefaults.buttonColors(
-        containerColor = containerColor,
-        contentColor = contentColor
-    ),
-    content = {
-        Text(text)
-        if (trailingIcon != null) {
-            Spacer(Modifier.width(10.dp))
-            Icon(
-                imageVector = trailingIcon,
-                contentDescription = trailingIcon.name
-            )
-        }
-    }
-)
 
 @Composable
 fun ShowSuccessTransactionDialog(
@@ -271,7 +145,7 @@ fun ShowSuccessTransactionDialog(
         },
         onDismissRequest = onDismissRequest ?: { showDialog = false },
         confirmButton = {
-            BtcFilledButton(
+            BitFilledButton(
                 text = confirmBtnText,
                 onClick = onConfirmBtnClick ?: { showDialog = false }
             )
