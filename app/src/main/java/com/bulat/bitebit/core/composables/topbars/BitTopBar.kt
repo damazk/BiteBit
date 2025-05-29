@@ -3,7 +3,6 @@ package com.bulat.bitebit.core.composables.topbars
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
-import androidx.compose.material.icons.automirrored.rounded.List
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -22,7 +21,6 @@ fun BitTopBar(
     titleColor: Color = Color.White,
     containerColor: Color = Color(0xFFE3851B),
     modifier: Modifier = Modifier.fillMaxWidth(),
-    onHistoryBtnClick: (() -> Unit)? = null,
     onNavigationIconClick: (() -> Unit)? = null
 ) {
 
@@ -53,19 +51,6 @@ fun BitTopBar(
         colors = TopAppBarDefaults.topAppBarColors(
             titleContentColor = titleColor,
             containerColor = containerColor
-        ),
-        actions =  {
-            if (onHistoryBtnClick != null) {
-                IconButton(
-                    onClick = onHistoryBtnClick
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Rounded.List,
-                        contentDescription = Icons.AutoMirrored.Rounded.List.name,
-                        tint = Color.White
-                    )
-                }
-            }
-        }
+        )
     )
 }

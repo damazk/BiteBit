@@ -1,14 +1,10 @@
-package com.bulat.bitebit.history
+package com.bulat.bitebit.core.composables.items
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,40 +14,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.bulat.bitebit.R
 import com.bulat.bitebit.model.TransactionUiItem
-import com.bulat.bitebit.utils.compose.BtcWalletErrorDialog
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-
-@RequiresApi(Build.VERSION_CODES.O)
-@Composable
-fun HistoryScreen(
-    modifier: Modifier = Modifier,
-    transactions: List<TransactionUiItem>,
-    showErrorDialog: Boolean,
-    errorMessage: String,
-    onDismissRequest: () -> Unit,
-    onConfirmBtnClick: () -> Unit,
-) {
-
-    Box(modifier.fillMaxSize().padding(16.dp)) {
-
-        if (showErrorDialog) {
-            BtcWalletErrorDialog(
-                titleText = stringResource(R.string.failed_to_load_transactions),
-                message = errorMessage,
-                onDismissRequest = onDismissRequest,
-                onConfirmBtnClick = onConfirmBtnClick
-            )
-        }
-
-        LazyColumn(Modifier.fillMaxSize()) {
-            items(transactions) { tx ->
-                TransactionItem(tx)
-            }
-        }
-    }
-}
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable

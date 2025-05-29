@@ -5,8 +5,6 @@ import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.bulat.bitebit.history.historyScreen
-import com.bulat.bitebit.history.navigateToHistoryScreen
 import com.bulat.bitebit.home.HOME_SCREEN_ROUTE
 import com.bulat.bitebit.home.homeScreen
 import com.bulat.bitebit.send_btc.presentation.compose.navigateToSendBtcScreen
@@ -24,12 +22,9 @@ fun BiteBitNavHost() {
     ) {
 
         homeScreen(
-            navController::navigateToHistoryScreen,
             navController::navigateToSendBtcScreen
         )
 
         sendBtcScreen(navController::navigateUp)
-
-        historyScreen(navController::navigateUp)
     }
 }
