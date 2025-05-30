@@ -15,7 +15,7 @@
     <string name="your_transaction_id_is">Your transaction ID is:</string>
     <string name="send_more">Send More</string>
     <string name="transaction_failed">Transaction Failed :(</string>
-    <string name="transactions_history">Transactions History</string>
+    <string name="transactions_history">transactions history</string>
     <string name="received">Received</string>
     <string name="sent">Sent</string>
     <string name="transaction_id">Transaction ID: %1$s…</string>

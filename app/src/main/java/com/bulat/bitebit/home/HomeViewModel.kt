@@ -8,20 +8,27 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bulat.bitebit.domain.usecase.GetAddressUseCase
 import com.bulat.bitebit.domain.usecase.GetBalanceUseCase
+import com.bulat.bitebit.domain.usecase.GetTransactionsUseCase
+import com.bulat.bitebit.model.TransactionUiItem
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getAddressUseCase: GetAddressUseCase,
-    private val getBalanceUseCase: GetBalanceUseCase
+    private val getBalanceUseCase: GetBalanceUseCase,
+    private val getTransactionsUseCase: GetTransactionsUseCase
 ): ViewModel() {
 
     var address by mutableStateOf("")
         private set
 
     var balance by mutableDoubleStateOf(0.0)
+        private set
+
+    var transactions by mutableStateOf<List<TransactionUiItem>>(emptyList())
         private set
 
     var showErrorDialog by mutableStateOf(false)
@@ -43,9 +50,19 @@ class HomeViewModel @Inject constructor(
         getAddressUseCase().onSuccess {
             address = it
             loadBalance(it)
+            getTransactions(it)
         }.onFailure {
             showErrorDialog = true
             errorMessage = it.message
+        }
+    }
+
+    private fun getTransactions(address: String) = viewModelScope.launch(Dispatchers.IO) {
+        getTransactionsUseCase(address).onSuccess {
+            transactions = it
+        }.onFailure {
+            errorMessage = it.message
+            showErrorDialog = true
         }
     }
 

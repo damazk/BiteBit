@@ -11,8 +11,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.bulat.bitebit.R
-import com.bulat.bitebit.home.BtcFilledButton
-import com.bulat.bitebit.home.BtcOutlinedTextField
+import com.bulat.bitebit.core.composables.buttons.BitFilledButton
+import com.bulat.bitebit.core.composables.text_fields.BitOutlinedTextField
 import com.bulat.bitebit.home.ShowSuccessTransactionDialog
 import com.bulat.bitebit.utils.compose.BtcWalletErrorDialog
 
@@ -66,14 +66,14 @@ fun SendBtcScreen(
         ) {
 
             // Recipient Address Field
-            BtcOutlinedTextField(
+            BitOutlinedTextField(
                 value = recipientAddress,
                 onValueChange = onRecipientAddressChange,
                 labelText = stringResource(R.string.address_to_send)
             )
 
             // Sum Field
-            BtcOutlinedTextField(
+            BitOutlinedTextField(
                 value = sum,
                 onValueChange = onSumChange,
                 labelText = stringResource(R.string.amount_to_send),
@@ -84,7 +84,7 @@ fun SendBtcScreen(
 
             Spacer(Modifier.weight(1f))
 
-            BtcFilledButton(
+            BitFilledButton(
                 text = stringResource(R.string.send),
                 enabled = recipientAddress.isNotEmpty() && sum.isNotEmpty() && !isSumError,
                 onClick = { onSendBtnClick() }
